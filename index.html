@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Busintory Product Catalog</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-app-name">Busintory</div>
+      <div class="login-app-sub">Product Catalog Admin</div>
+    </div>
+    <div class="form-group" style="margin-bottom:14px;">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="login-email" type="email" placeholder="your@email.com"/>
+    </div>
+    <div class="form-group" style="margin-bottom:20px;">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="login-password" type="password" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') handleLogin()"/>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">
+      <i class="ti ti-login"></i> Sign in
+    </button>
+    <div id="login-error" class="login-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-screen" class="app-screen hidden">
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="app-name">Busintory</div>
+        <div class="app-sub">Product Catalog Admin</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">Main</div>
+        <div class="nav-item active" onclick="showPage('dashboard')">
+          <i class="ti ti-home"></i><span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showPage('products')">
+          <i class="ti ti-pill"></i><span>Products</span>
+        </div>
+        <div class="nav-section">Manage</div>
+        <div class="nav-item" onclick="showPage('brands')">
+          <i class="ti ti-building"></i><span>Brands</span>
+        </div>
+        <div class="nav-item" id="nav-categories" onclick="showPage('categories')">
+          <i class="ti ti-tag"></i><span>Categories</span>
+        </div>
+        <div class="nav-item" onclick="showPage('forms')">
+          <i class="ti ti-layout-list"></i><span>Forms / Variants</span>
+        </div>
+        <div class="nav-item" id="nav-staff" onclick="showPage('staff')">
+          <i class="ti ti-users"></i><span>Staff</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="staff-info">
+          <div class="staff-name" id="staff-name">—</div>
+          <div class="staff-role" id="staff-role">—</div>
+        </div>
+        <button class="icon-btn" onclick="handleLogout()" title="Sign out">
+          <i class="ti ti-logout" style="color:rgba(255,255,255,0.5);font-size:18px;"></i>
+        </button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="hamburger" onclick="openSidebar()">
+            <i class="ti ti-menu-2"></i>
+          </button>
+          <div class="page-title" id="page-title">Dashboard</div>
+        </div>
+        <div class="topbar-right" id="topbar-actions"></div>
+      </header>
+      <div class="content" id="content">
+        <div class="loading">Loading...</div>
+      </div>
+
+      <!-- Bottom nav (mobile only) -->
+      <nav class="bottom-nav" id="bottom-nav">
+        <div class="bottom-nav-item active" onclick="showPage('dashboard')">
+          <i class="ti ti-home"></i>
+          <span>Home</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showPage('products')">
+          <i class="ti ti-pill"></i>
+          <span>Products</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showPage('brands')">
+          <i class="ti ti-building"></i>
+          <span>Brands</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showPage('categories')">
+          <i class="ti ti-tag"></i>
+          <span>More</span>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+</div>
+
+<!-- Core setup -->
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+
+<!-- Utilities -->
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/dom.js"></script>
+<script src="js/utils/badges.js"></script>
+
+<!-- Page modules -->
+<script src="js/pages/dashboard.js"></script>
+<script src="js/pages/products.js"></script>
+<script src="js/pages/brands.js"></script>
+<script src="js/pages/categories.js"></script>
+<script src="js/pages/forms.js"></script>
+<script src="js/pages/staff.js"></script>
+
+<!-- Shared utilities & routing -->
+<script src="js/shared.js"></script>
+<script src="js/navigation.js"></script>
+
+<!-- Main app -->
+<script src="js/app.js"></script>
+</body>
+</html>
