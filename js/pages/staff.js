@@ -67,15 +67,34 @@ async function saveStaff() {
   if (!full_name || !email || !password) { showToast('All fields are required', 'error'); return }
   if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return }
 
-  const { data, error } = await db.auth.admin.createUser({ email, password, email_confirm: true })
-  if (error) { showToast(error.message, 'error'); return }
+  // get the current session token to pass to the edge function
+  const { data: { session } } = await db.auth.getSession()
+  if (!session) { showToast('Not authenticated', 'error'); return }
 
-  const { error: staffError } = await db.from('staff').insert({ id: data.user.id, full_name, role })
-  if (staffError) { showToast('Error creating staff record', 'error'); return }
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/create-staff`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ full_name, email, password, role })
+    })
 
-  closeModal()
-  showToast('Staff member added!')
-  loadStaff()
+    const result = await response.json()
+
+    if (!response.ok) {
+      showToast(result.error || 'Error creating staff', 'error')
+      return
+    }
+
+    closeModal()
+    showToast(`${full_name} added successfully!`)
+    loadStaff()
+
+  } catch (err) {
+    showToast('Network error — please try again', 'error')
+  }
 }
 
 function showEditStaffRole(id, name, currentRole) {
