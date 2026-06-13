@@ -127,4 +127,4 @@ Ensure your Supabase project has the necessary tables and RLS policies configure
 
 ## License
 
-This project is a Personal Project of Great Onyemaechi(jnr) Joseph, All rights reserved.
+This project is a Personal Project of Great Onyemaechi(jnr) Joseph, All rights reserved &copy; 2026 ™️Busintory. 
