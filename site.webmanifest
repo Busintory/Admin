@@ -2,11 +2,11 @@
   "name": "Busintory Admin",
   "short_name": "Busintory",
   "description": "Busintory Product Catalog Administration",
-  "start_url": "Admin",
+  "start_url": "./index.html",
   "id": "/Admin/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "background_color": "#043915",
+  "theme_color": "#FFFD8F",
   "orientation": "portrait",
   "icons": [
     {
