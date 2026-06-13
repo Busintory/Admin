@@ -769,6 +769,21 @@ tbody td {
   color: #fff;
 }
 
+#update-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+
+  padding: 1rem;
+
+  background: var(--color-primary-dark);
+  color: var(--color-accent);
+
+  border-radius: 10px;
+
+  z-index: 9999;
+}
 /* ──────────────────────────────────────────────────────────
    TABLET: 768px+
    ────────────────────────────────────────────────────────── */
