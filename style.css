@@ -784,6 +784,14 @@ tbody td {
 
   z-index: 9999;
 }
+
+#cpright {
+  display: block;
+  font-size: 10px;
+  color: var(--color-accent);
+  text-align: center;
+  margin: 12px 0;
+}
 /* ──────────────────────────────────────────────────────────
    TABLET: 768px+
    ────────────────────────────────────────────────────────── */
