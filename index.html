@@ -91,7 +91,7 @@
       <input class="form-input" id="login-password" type="password" placeholder="••••••••"
         onkeydown="if(event.key==='Enter') handleLogin()"/>
     </div>
-    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">
+    <button title="login" class="btn-primary" style="width:100%;justify-content:center;" onclick="handleLogin()">
       <i class="ti ti-login"></i> Sign in
     </button>
     <div id="login-error" class="login-error"></div>
@@ -136,7 +136,7 @@
           <div class="staff-name" id="staff-name">—</div>
           <div class="staff-role" id="staff-role">—</div>
         </div>
-        <button class="icon-btn" onclick="handleLogout()" title="Sign out">
+        <button title="Sign out" class="icon-btn" onclick="handleLogout()">
           <i class="ti ti-logout" style="color:rgba(255,255,255,0.5);font-size:18px;"></i>
         </button>
       </div>
@@ -155,7 +155,7 @@
       <div class="content" id="content">
         <div class="loading">Loading...</div>
       </div>
-      <strong>this project is the intelectual property of ™️Busintory, copyright © 2026 Busintory. All rights reserved.</strong>
+      <span>this project is the intelectual property of ™️Busintory, copyright © 2026 Busintory. All rights reserved.</span>
 
       <!-- Bottom nav (mobile only) -->
       <nav class="bottom-nav" id="bottom-nav">
