@@ -1,10 +1,12 @@
-const STATIC_CACHE = "busintory-admin-static-v1";
+importScripts('./version.js');
 
+const STATIC_CACHE = `busintory-static-${self.APP_VERSION}`;
 const APP_SHELL = [
   "/",
-  "/index.html",
-  "/style.css",
-  "./offline.html",
+  "index.html",
+  "style.css",
+  "offline.html",
+  "version.js",
 
   // Core JS
   "/js/config.js",
