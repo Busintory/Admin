@@ -2,28 +2,28 @@ importScripts('./version.js');
 
 const STATIC_CACHE = `busintory-static-${self.APP_VERSION}`;
 const APP_SHELL = [
-  "/",
-  "index.html",
-  "style.css",
-  "offline.html",
-  "version.js",
+  "./",
+  "./index.html",
+  "./style.css",
+  "./offline.html",
+  "./version.js",
 
   // Core JS
-  "/js/config.js",
-  "/js/auth.js",
-  "/js/navigation.js",
-  "/js/app.js",
+  "./js/config.js",
+  "./js/auth.js",
+  "./js/navigation.js",
+  "./js/app.js",
 
   // Utilities
-  "/js/utils/dom.js",
-  "/js/utils/helpers.js",
+  "./js/utils/dom.js",
+  "./js/utils/helpers.js",
 
   // Pages
-  "/js/pages/dashboard.js",
-  "/js/pages/products.js",
-  "/js/pages/brands.js",
-  "/js/pages/categories.js",
-  "/js/pages/staff.js"
+  "./js/pages/dashboard.js",
+  "./js/pages/products.js",
+  "./js/pages/brands.js",
+  "./js/pages/categories.js",
+  "./js/pages/staff.js"
 ];
 
 
