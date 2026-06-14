@@ -1,4 +1,4 @@
-const CACHE_NAME = "busintory-admin-v2";
+const CACHE_NAME = "busintory-admin-v3";
 
 const FILES_TO_CACHE = [
   "./",
