@@ -14,7 +14,7 @@ function roleBadge(role) {
     data_entry:   ['badge-data-entry',   'Data Entry'],
   }
   const [cls, label] = map[role] || ['badge-other', role]
-  return `<span class="badge ${cls}">${label}</span>`
+  return `<span class="badge ${cls}">${escapeHtml(label)}</span>`
 }
 
 async function handleLogin() {

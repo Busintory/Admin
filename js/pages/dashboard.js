@@ -14,9 +14,9 @@ async function loadDashboard() {
 
   const rows = recent.data?.map(p => `
     <tr>
-      <td><strong>${p.name}</strong></td>
-      <td class="td-muted">${p.local_name || '—'}</td>
-      <td>${p.categories ? categoryBadge(p.categories.name) : '—'}</td>
+      <td><strong>${escapeHtml(p.name)}</strong></td>
+      <td class="td-muted">${p.local_name ? escapeHtml(p.local_name) : '-'}</td>
+      <td>${p.categories ? categoryBadge(p.categories.name) : '-'}</td>
     </tr>
   `).join('') || ''
 

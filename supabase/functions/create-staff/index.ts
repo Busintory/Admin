@@ -6,6 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+const allowedRoles = new Set(['super_admin', 'data_manager', 'data_entry'])
+
 serve(async (req) => {
   // handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -13,6 +15,12 @@ serve(async (req) => {
   }
 
   try {
+    if (req.method !== 'POST') {
+      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+        status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // create a supabase client with the service role key
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -57,6 +65,18 @@ serve(async (req) => {
       })
     }
 
+    if (!allowedRoles.has(role)) {
+      return new Response(JSON.stringify({ error: 'Invalid role' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    if (password.length < 8) {
+      return new Response(JSON.stringify({ error: 'Password must be at least 8 characters' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // create the auth user
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
@@ -78,7 +98,8 @@ serve(async (req) => {
     if (staffError) {
       // rollback — delete the auth user if staff insert fails
       await supabaseAdmin.auth.admin.deleteUser(newUser.user.id)
-      return new Response(JSON.stringify({ error: staffError.message }), {
+      console.error('Failed to create staff record:', staffError)
+      return new Response(JSON.stringify({ error: 'Error creating staff record' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -88,7 +109,8 @@ serve(async (req) => {
     })
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    console.error('Unhandled create-staff error:', err)
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }

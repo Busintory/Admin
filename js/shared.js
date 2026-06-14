@@ -24,8 +24,7 @@ async function saveSimple(table, label, reloader) {
   }
   closeModal()
   showToast(`${label} added!`)
-  const reloaders = { loadBrands, loadCategories, loadForms }
-  if (reloaders[reloader]) reloaders[reloader]()
+  if (typeof reloader === 'function') reloader()
 }
 
 async function deleteSimple(table, id, name, reloader) {

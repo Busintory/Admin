@@ -3,7 +3,7 @@ function showUpdateToast() {
   const banner =
     document.getElementById("update-banner");
 
-  banner.hidden = false;
+  banner.classList.remove("hidden");
 }
 
 document

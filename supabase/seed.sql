@@ -1,0 +1,3 @@
+-- Optional local seed data goes here.
+-- Create the first auth user through Supabase Auth, then insert its matching
+-- staff row as super_admin in local development.

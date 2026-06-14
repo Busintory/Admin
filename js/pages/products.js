@@ -12,13 +12,13 @@ async function loadProducts() {
 
   const rows = data?.map(p => `
     <tr>
-      <td><strong>${p.name}</strong></td>
-      <td class="td-muted">${p.local_name || '—'}</td>
-      <td>${p.categories ? categoryBadge(p.categories.name) : '—'}</td>
+      <td><strong>${escapeHtml(p.name)}</strong></td>
+      <td class="td-muted">${p.local_name ? escapeHtml(p.local_name) : '-'}</td>
+      <td>${p.categories ? categoryBadge(p.categories.name) : '-'}</td>
       <td>
         <div class="td-actions">
-          ${hasRole('data_entry') ? `<button class="icon-btn" onclick="showAddProduct('${p.id}')" title="Edit"><i class="ti ti-edit"></i></button>` : ''}
-          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteProduct('${p.id}', '${p.name}')" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
+          ${hasRole('data_entry') ? `<button class="icon-btn" onclick="showAddProduct('${escapeJsString(p.id)}')" title="Edit"><i class="ti ti-edit"></i></button>` : ''}
+          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteProduct('${escapeJsString(p.id)}', '${escapeJsString(p.name)}')" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
         </div>
       </td>
     </tr>
@@ -72,16 +72,16 @@ async function showAddProduct(productId = null) {
   }
 
   const catOptions = cats.data?.map(c =>
-    `<option value="${c.id}" ${product?.category_id === c.id ? 'selected' : ''}>${c.name}</option>`
+    `<option value="${escapeHtml(c.id)}" ${product?.category_id === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`
   ).join('') || ''
 
   const brandChips = brands.data?.map(b =>
     `<div class="chip ${selectedBrands.includes(b.id) ? 'selected' : ''}"
-      onclick="toggleChip(this, '${b.id}', 'brand')">${b.name}</div>`
+      onclick="toggleChip(this, '${escapeJsString(b.id)}', 'brand')">${escapeHtml(b.name)}</div>`
   ).join('') || ''
 
   const formOptions = forms.data?.map(f =>
-    `<option value="${f.id}">${f.name}</option>`
+    `<option value="${escapeHtml(f.id)}">${escapeHtml(f.name)}</option>`
   ).join('') || ''
 
   window._selectedBrands = new Set(selectedBrands)
@@ -92,11 +92,11 @@ async function showAddProduct(productId = null) {
       <div class="form-grid">
         <div class="form-group">
           <label class="form-label">Name <span class="optional">required</span></label>
-          <input class="form-input" id="f-name" placeholder="e.g. Paracetamol" value="${product?.name || ''}"/>
+          <input class="form-input" id="f-name" placeholder="e.g. Paracetamol" value="${escapeHtml(product?.name || '')}"/>
         </div>
         <div class="form-group">
           <label class="form-label">Local name <span class="optional">optional</span></label>
-          <input class="form-input" id="f-local" placeholder="e.g. Flagyl, Panadol" value="${product?.local_name || ''}"/>
+          <input class="form-input" id="f-local" placeholder="e.g. Flagyl, Panadol" value="${escapeHtml(product?.local_name || '')}"/>
         </div>
         <div class="form-group">
           <label class="form-label">Category <span class="optional">required</span></label>
@@ -107,7 +107,7 @@ async function showAddProduct(productId = null) {
         </div>
         <div class="form-group">
           <label class="form-label">Description <span class="optional">optional</span></label>
-          <input class="form-input" id="f-desc" placeholder="Short note…" value="${product?.description || ''}"/>
+          <input class="form-input" id="f-desc" placeholder="Short note..." value="${escapeHtml(product?.description || '')}"/>
         </div>
       </div>
     </div>
@@ -138,7 +138,7 @@ async function showAddProduct(productId = null) {
 
     <div class="form-actions">
       <button class="btn-ghost" onclick="showPage('products')">Cancel</button>
-      <button class="btn-primary" onclick="saveProduct(${isEdit ? `'${productId}'` : null})">
+      <button class="btn-primary" onclick="saveProduct(${isEdit ? `'${escapeJsString(productId)}'` : null})">
         <i class="ti ti-check"></i> ${isEdit ? 'Save changes' : 'Save product'}
       </button>
     </div>
@@ -159,10 +159,10 @@ function renderVariantRow(variant, index) {
   row.id = `variant-row-${index}`
   row.style.cssText = 'display:flex;align-items:center;gap:8px;background:var(--color-bg);padding:8px 12px;border-radius:8px;border:1px solid var(--color-border);'
   row.innerHTML = `
-    <span style="font-size:13px;font-weight:500;color:var(--color-text);flex:0 0 auto;">${variant.form_name}</span>
+    <span style="font-size:13px;font-weight:500;color:var(--color-text);flex:0 0 auto;">${escapeHtml(variant.form_name)}</span>
     ${variant.size_label
-      ? `<span style="font-size:12px;color:var(--color-text-secondary);">· ${variant.size_label}</span>`
-      : `<span style="font-size:12px;color:var(--color-text-tertiary);">· no size</span>`
+      ? `<span style="font-size:12px;color:var(--color-text-secondary);">- ${escapeHtml(variant.size_label)}</span>`
+      : `<span style="font-size:12px;color:var(--color-text-tertiary);">- no size</span>`
     }
     <button class="icon-btn danger" onclick="removeVariantRow(${index})"
       style="margin-left:auto;" title="Remove">
@@ -217,20 +217,28 @@ async function saveProduct(productId = null) {
     id = data.id
   }
 
-  await db.from('product_brands').delete().eq('product_id', id)
+  const { error: deleteBrandsError } = await db.from('product_brands').delete().eq('product_id', id)
+  if (deleteBrandsError) { showToast('Error saving product brands', 'error'); return }
+
   if (window._selectedBrands.size > 0) {
-    await db.from('product_brands').insert([...window._selectedBrands].map(brand_id => ({ product_id: id, brand_id })))
+    const { error: insertBrandsError } = await db
+      .from('product_brands')
+      .insert([...window._selectedBrands].map(brand_id => ({ product_id: id, brand_id })))
+    if (insertBrandsError) { showToast('Error saving product brands', 'error'); return }
   }
 
-  await db.from('product_forms').delete().eq('product_id', id)
+  const { error: deleteFormsError } = await db.from('product_forms').delete().eq('product_id', id)
+  if (deleteFormsError) { showToast('Error saving product forms', 'error'); return }
+
   if (window._variants.length > 0) {
-    await db.from('product_forms').insert(
+    const { error: insertFormsError } = await db.from('product_forms').insert(
       window._variants.map(v => ({
         product_id: id,
         form_id: v.form_id,
         size_label: v.size_label || null
       }))
     )
+    if (insertFormsError) { showToast('Error saving product forms', 'error'); return }
   }
 
   showToast(productId ? 'Product updated!' : 'Product added!')

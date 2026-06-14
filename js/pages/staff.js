@@ -5,13 +5,13 @@ async function loadStaff() {
   const { data } = await db.from('staff').select('*').order('full_name')
   const rows = data?.map(s => `
     <tr>
-      <td><strong>${s.full_name}</strong></td>
+      <td><strong>${escapeHtml(s.full_name)}</strong></td>
       <td>${roleBadge(s.role)}</td>
       <td>
         <div class="td-actions">
           ${s.id !== currentStaff.id ? `
-            <button class="icon-btn" onclick="showEditStaffRole('${s.id}', '${s.full_name}', '${s.role}')" title="Change role"><i class="ti ti-edit"></i></button>
-            <button class="icon-btn danger" onclick="deleteStaff('${s.id}', '${s.full_name}')" title="Remove"><i class="ti ti-trash"></i></button>
+            <button class="icon-btn" onclick="showEditStaffRole('${escapeJsString(s.id)}', '${escapeJsString(s.full_name)}', '${escapeJsString(s.role)}')" title="Change role"><i class="ti ti-edit"></i></button>
+            <button class="icon-btn danger" onclick="deleteStaff('${escapeJsString(s.id)}', '${escapeJsString(s.full_name)}')" title="Remove"><i class="ti ti-trash"></i></button>
           ` : '<span style="font-size:11px;color:var(--color-text-tertiary);">you</span>'}
         </div>
       </td>
@@ -41,7 +41,7 @@ function showAddStaff() {
     </div>
     <div class="form-group" style="margin-bottom:12px;">
       <label class="form-label">Password</label>
-      <input class="form-input" id="s-password" type="password" placeholder="Min 6 characters"/>
+      <input class="form-input" id="s-password" type="password" placeholder="Min 8 characters"/>
     </div>
     <div class="form-group" style="margin-bottom:20px;">
       <label class="form-label">Role</label>
@@ -65,7 +65,7 @@ async function saveStaff() {
   const role = document.getElementById('s-role').value
 
   if (!full_name || !email || !password) { showToast('All fields are required', 'error'); return }
-  if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return }
+  if (password.length < 8) { showToast('Password must be at least 8 characters', 'error'); return }
 
   // get the current session token to pass to the edge function
   const { data: { session } } = await db.auth.getSession()
@@ -99,7 +99,7 @@ async function saveStaff() {
 
 function showEditStaffRole(id, name, currentRole) {
   showModal(`
-    <div class="modal-title">Change role — ${name}</div>
+    <div class="modal-title">Change role - ${escapeHtml(name)}</div>
     <div class="form-group" style="margin-bottom:20px;">
       <label class="form-label">Role</label>
       <select class="form-select" id="edit-role">
@@ -110,7 +110,7 @@ function showEditStaffRole(id, name, currentRole) {
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
       <button class="btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="updateStaffRole('${id}')">Save</button>
+      <button class="btn-primary" onclick="updateStaffRole('${escapeJsString(id)}')">Save</button>
     </div>
   `)
 }

@@ -8,7 +8,7 @@ async function loadCategories() {
       <td>${categoryBadge(c.name)}</td>
       <td>
         <div class="td-actions">
-          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteSimple('categories', '${c.id}', '${c.name}', loadCategories)" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
+          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteSimple('categories', '${escapeJsString(c.id)}', '${escapeJsString(c.name)}', loadCategories)" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
         </div>
       </td>
     </tr>

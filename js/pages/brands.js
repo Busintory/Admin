@@ -5,10 +5,10 @@ async function loadBrands() {
   const { data } = await db.from('brands').select('*').order('name')
   const rows = data?.map(b => `
     <tr>
-      <td><strong>${b.name}</strong></td>
+      <td><strong>${escapeHtml(b.name)}</strong></td>
       <td>
         <div class="td-actions">
-          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteSimple('brands', '${b.id}', '${b.name}', loadBrands)" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
+          ${hasRole('data_manager') ? `<button class="icon-btn danger" onclick="deleteSimple('brands', '${escapeJsString(b.id)}', '${escapeJsString(b.name)}', loadBrands)" title="Delete"><i class="ti ti-trash"></i></button>` : ''}
         </div>
       </td>
     </tr>

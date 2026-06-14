@@ -4,5 +4,5 @@ function categoryBadge(name) {
     'Drinks': 'badge-drinks', 'Perfume': 'badge-perfume',
     'Food': 'badge-food', 'Recharge card': 'badge-recharge',
   }
-  return `<span class="badge ${map[name] || 'badge-other'}">${name}</span>`
+  return `<span class="badge ${map[name] || 'badge-other'}">${escapeHtml(name)}</span>`
 }
