@@ -40,22 +40,30 @@ async function handleLogout() {
   document.getElementById('login-password').value = ''
 }
 
+// Inside js/auth.js
+
 async function bootApp(user) {
-  const { data: staff, error } = await db.from('staff').select('*').eq('id', user.id).single()
+  // Pull profile information down while splash screen is hiding the main layout
+  const { data: staff, error } = await db.from('staff').select('*').eq('id', user.id).single();
+  
   if (error || !staff) {
-    await db.auth.signOut()
-    document.getElementById('login-error').textContent = 'Your account is not registered as staff. Contact the admin.'
-    return
+    await db.auth.signOut();
+    document.getElementById('app-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('login-error').textContent = 'Your account is not registered as staff. Contact the admin.';
+    return;
   }
 
-  currentStaff = staff
+  currentStaff = staff;
 
-  document.getElementById('staff-name').textContent = staff.full_name
-  document.getElementById('staff-role').textContent = roleLabel(staff.role)
-  document.getElementById('nav-staff').style.display = hasRole('super_admin') ? '' : 'none'
+  document.getElementById('staff-name').textContent = staff.full_name;
+  document.getElementById('staff-role').textContent = roleLabel(staff.role);
+  document.getElementById('nav-staff').style.display = hasRole('super_admin') ? '' : 'none';
 
-  document.getElementById('login-screen').classList.add('hidden')
-  document.getElementById('app-screen').classList.remove('hidden')
+  // Revel the dashboard framework shell
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app-screen').classList.remove('hidden');
 
-  loadDashboard()
+  // Trigger content population routines
+  loadDashboard();
 }
